@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import PantoneColor
+from .models import PantoneColor, PantoneColorPrototype, DailyColors
 
-admin.site.register([PantoneColor])
+admin.site.register([PantoneColor, PantoneColorPrototype, DailyColors])
