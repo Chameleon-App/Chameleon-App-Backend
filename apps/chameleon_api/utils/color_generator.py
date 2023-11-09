@@ -5,10 +5,13 @@ from disntance_calculator import DistanceCalculator
 
 
 class Color:
-    def __init__(self, r, g, b):
-        self.r = r
-        self.g = g
-        self.b = b
+    def __init__(self, r, g, b, color=None):
+        if color is None:
+            self.r = r
+            self.g = g
+            self.b = b
+        else:
+            self.r, self.g, self.b = ColorConvertor.hex_to_rgb(color.hex)
 
     def get_rgb_components(self) -> (int, int, int):
         return self.r, self.g, self.b
@@ -26,8 +29,7 @@ class ColorGenerator:
 
     def generate_daily_colors(self):
         color_p1 = self.repo.get_random_color()
-        r, g, b = ColorConvertor.hex_to_rgb(color_p1.hex)
-        color_1 = Color(r, g, b)
+        color_1 = Color(color=color_p1)
 
         # TODO: add random method
 
