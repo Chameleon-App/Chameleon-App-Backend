@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.utils.translation import gettext as _
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class PantoneColorPrototype(models.Model):
@@ -19,3 +20,11 @@ class PantoneColor(models.Model):
 class DailyColors(models.Model):
     date = models.DateField(_("Date"), default=datetime.date.today)
     colors = models.ManyToManyField(PantoneColor)
+
+
+class RatedPhoto(models.Model):
+    image_url = models.ImageField(upload_to="")
+    date = models.DateField(_("Date"), default=datetime.date.today)
+    rating = models.IntegerField(
+        default=0, validators=[MaxValueValidator(100), MinValueValidator(0)]
+    )
