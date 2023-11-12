@@ -1,7 +1,7 @@
 import numpy as np
 
-from color_convertor import ColorConvertor
-from disntance_calculator import DistanceCalculator
+from apps.chameleon_api.utils.color_convertor import ColorConvertor
+from apps.chameleon_api.utils.disntance_calculator import DistanceCalculator
 
 
 class Color:
