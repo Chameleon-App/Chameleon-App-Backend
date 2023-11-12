@@ -6,6 +6,10 @@ from apps.chameleon_api.models import PantoneColor, DailyColors, PantoneColorPro
 
 class ColorRepository:
     @staticmethod
+    def get_all_colors():
+        return PantoneColor.objects.all()
+
+    @staticmethod
     def get_color_by_id(color_id):
         return PantoneColor.objects.get(id=color_id)
 
@@ -29,8 +33,8 @@ class ColorRepository:
     @staticmethod
     def add_daily_colors(colors_id):
         daily = DailyColors()
-        daily.save()
         for color_id in colors_id:
             color = PantoneColor.objects.get(id=color_id)
             daily.colors.add(color)
         daily.date = datetime.date.today()
+        daily.save()
