@@ -18,7 +18,7 @@ class PhotoRepository:
 
     def add_rated_photo(self, photo: Image, rating: int):
         path = self.get_new_path(photo)
-        photo.save(f"{settings.MEDIA_ROOT}{path}.jpeg")
+        photo.save(f"{settings.MEDIA_ROOT}/{path}.jpeg")
         rated_photo = RatedPhoto()
         rated_photo.date = datetime.date.today()
         rated_photo.rating = rating
