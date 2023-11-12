@@ -5,7 +5,7 @@ from .models import *
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = PantoneColor
-        fields = "__all__"
+        fields = ["name", "number", "hex"]
 
 
 class DailyColorsSerializer(serializers.ModelSerializer):
@@ -13,4 +13,10 @@ class DailyColorsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DailyColors
+        fields = "__all__"
+
+
+class RatedPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RatedPhoto
         fields = "__all__"
