@@ -5,13 +5,18 @@ from apps.chameleon_api.utils.disntance_calculator import DistanceCalculator
 
 
 class Color:
-    def __init__(self, r, g, b, color=None):
-        if color is None:
+    def __init__(self, r=None, g=None, b=None, color_obj=None, color_dict=None):
+        if color_obj is None and color_dict is None:
             self.r = r
             self.g = g
             self.b = b
-        else:
-            self.r, self.g, self.b = ColorConvertor.hex_to_rgb(color.hex)
+        elif color_obj is not None:
+            self.r, self.g, self.b = ColorConvertor.hex_to_rgb(color_obj.hex)
+        elif color_dict is not None:
+            self.r, self.g, self.b = ColorConvertor.hex_to_rgb(color_dict["hex"])
+
+    def __str__(self):
+        return f"Color({self.r},{self.g},{self.b})"
 
     def get_rgb_components(self) -> (int, int, int):
         return self.r, self.g, self.b
@@ -29,7 +34,7 @@ class ColorGenerator:
 
     def generate_daily_colors(self):
         color_p1 = self.repo.get_random_color()
-        color_1 = Color(color=color_p1)
+        color_1 = Color(color_obj=color_p1)
 
         # TODO: add random method
 
