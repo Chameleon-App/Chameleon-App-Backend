@@ -22,6 +22,6 @@ class PhotoRepository:
         rated_photo = RatedPhoto()
         rated_photo.date = datetime.date.today()
         rated_photo.rating = rating
-        rated_photo.image_url = path
+        rated_photo.image_url = f"{path}.jpeg"
         rated_photo.save()
         return rated_photo
