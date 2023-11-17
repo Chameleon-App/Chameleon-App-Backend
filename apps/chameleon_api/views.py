@@ -1,7 +1,33 @@
 from rest_framework.generics import *
-from .serializers import *
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import ColorSerializer, DailyColorsSerializer, RatedPhotoSerializer
+from .service.color_service import ColorService
+from .service.photo_rater_service import PhotoRaterService
+from .service.photo_service import PhotoService
 
 
 class ColorListView(ListAPIView):
     serializer_class = ColorSerializer
-    queryset = PantoneColor.objects.all()
+    queryset = ColorService.get_all_colors()
+
+
+class DailyColorsView(APIView):
+    def get(self, request):
+        snippet = ColorService.get_last_daily_color()
+        serializer_class = DailyColorsSerializer(snippet)
+        return Response(serializer_class.data)
+
+
+class PhotoRatingView(APIView):
+    def post(self, request):
+        photo_bytes = request.FILES.get("photo").read()
+        photo_rater_service = PhotoRaterService()
+        rated_photo = photo_rater_service.get_rated_photo(photo_bytes)
+        serializer = RatedPhotoSerializer(rated_photo)
+        return Response(serializer.data)
+
+
+class TodayPhotoRating(ListAPIView):
+    serializer_class = RatedPhotoSerializer
+    queryset = PhotoService.get_most_rated_today()
