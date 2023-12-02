@@ -43,7 +43,7 @@ urlpatterns = [
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if os.environ["MODE"] == "0":
+if os.environ["DJANGO_DEBUG"]:
     urlpatterns += [
         path("admin/", admin.site.urls),
     ]
