@@ -31,10 +31,8 @@ class ColorRepository:
         return DailyColors.objects.latest("id")
 
     @staticmethod
-    def add_daily_colors(colors_id):
-        daily = DailyColors()
-        for color_id in colors_id:
-            color = PantoneColor.objects.get(id=color_id)
-            daily.colors.add(color)
+    def add_daily_colors(colors):
+        daily = DailyColors.objects.create()
+        daily.colors.set(colors)
         daily.date = datetime.date.today()
         daily.save()

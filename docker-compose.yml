@@ -1,9 +1,32 @@
 version: '3'
 
 services:
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6739:6739"
+    volumes:
+      - ./Users/evlko/Documents/GitHub/Chameleon_App_Backend/redis.conf:/etc/redis/redis.conf
+    command: [ "redis-server", "/etc/redis/redis.conf" ]
   backend:
+    depends_on:
+      - redis
     restart: always
     build: .
     ports:
       - "8000:8000"
     container_name: backend
+    env_file:
+      - .env
+  celery:
+    depends_on:
+      - backend
+      - redis
+    build: .
+    command: >
+      bash -c "
+      celery -A config beat -l info &
+      celery -A config worker -l info
+      "
+    env_file:
+      - .env
