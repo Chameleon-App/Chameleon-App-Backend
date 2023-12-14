@@ -11,9 +11,9 @@ from rest_framework.authtoken.models import Token
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
-    streak = models.IntegerField(default=0)
-    photos = models.IntegerField(default=0)
-    rating = models.IntegerField(default=0)
+    current_streak = models.IntegerField(default=0)
+    total_photos = models.IntegerField(default=0)
+    total_rating = models.IntegerField(default=0)
 
 
 @receiver(post_save, sender=User)
@@ -52,7 +52,9 @@ class DailyColors(models.Model):
 
 
 class RatedPhoto(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, null=True, related_name="photos"
+    )
     image_url = models.ImageField(upload_to="")
     date = models.DateField(_("Date"), default=datetime.date.today)
     rating = models.IntegerField(

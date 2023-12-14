@@ -10,4 +10,5 @@ urlpatterns = [
     path("photos/top/", TopPhotosListView.as_view()),
     path("auth/signup/", CreateUserView.as_view()),
     path("auth/token/", ObtainAuthToken.as_view()),
+    path("profiles/<str:username>/", ProfileInfoView.as_view()),
 ]

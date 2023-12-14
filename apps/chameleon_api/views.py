@@ -11,10 +11,12 @@ from .serializers import (
     DailyColorsSerializer,
     RatedPhotoSerializer,
     UserSerializer,
+    ProfileSerializer,
 )
 from .service.color_service import ColorService
 from .service.photo_rater_service import PhotoRaterService
 from .service.photo_service import PhotoService
+from .service.profile_service import ProfileService
 
 
 class ColorListView(ListAPIView):
@@ -48,7 +50,7 @@ class PhotoRatingView(APIView):
 
         photo_rater_service = PhotoRaterService()
         rated_photo = photo_rater_service.get_rated_photo(photo_bytes, user)
-        serializer = RatedPhotoSerializer(rated_photo)
+        serializer = RatedPhotoSerializer(rated_photo, context={"request": request})
         return Response(serializer.data)
 
 
@@ -68,3 +70,10 @@ class TopPhotosListView(ListAPIView):
 class CreateUserView(CreateAPIView):
     model = get_user_model()
     serializer_class = UserSerializer
+
+
+class ProfileInfoView(APIView):
+    def get(self, request, *args, **kwargs):
+        snippet = ProfileService.get_profile_info(self.kwargs["username"])
+        serializer_class = ProfileSerializer(snippet, context={"request": request})
+        return Response(serializer_class.data)

@@ -36,6 +36,20 @@ class DailyColorsSerializer(serializers.ModelSerializer):
 
 
 class RatedPhotoSerializer(serializers.ModelSerializer):
+    image_url = serializers.ImageField(
+        max_length=None,
+        use_url=True,
+    )
+
     class Meta:
         model = RatedPhoto
+        fields = "__all__"
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username")
+    photos = RatedPhotoSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Profile
         fields = "__all__"
