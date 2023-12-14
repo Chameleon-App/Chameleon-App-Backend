@@ -47,8 +47,8 @@ class TopPhotosListView(ListAPIView):
         date = self.request.query_params.get("date", None)
         if date:
             date = datetime.strptime(date, '%Y-%m-%d').date()
-        offset = self.request.query_params.get("offset", 0)
-        limit = self.request.query_params.get("limit", 15)
+        offset = int(self.request.query_params.get("offset", 0))
+        limit = int(self.request.query_params.get("limit", 15))
 
         return PhotoService.get_most_rated_photos(date=date, offset=offset, limit=limit)
 
