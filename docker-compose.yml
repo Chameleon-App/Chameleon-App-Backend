@@ -2,8 +2,6 @@ version: '3'
 
 services:
   backend:
-    depends_on:
-      - redis
     restart: always
     build: .
     ports:
