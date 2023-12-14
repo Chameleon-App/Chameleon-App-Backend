@@ -6,7 +6,9 @@ from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name="profile")
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="profile"
+    )
     profile_photo_url = models.ImageField(upload_to="", default="evlko.png")
     bio = models.TextField(max_length=500, blank=True)
     current_streak = models.IntegerField(default=0)

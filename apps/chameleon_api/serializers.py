@@ -72,14 +72,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 class DaySerializer(serializers.ModelSerializer):
     colors = ColorSerializer(many=True)
-    photos = serializers.SerializerMethodField('get_photos')
+    photos = serializers.SerializerMethodField("get_photos")
 
     class Meta:
         model = DailyColors
         fields = ["colors", "photos"]
 
     def get_photos(self, foo):
-        user = self.context['request'].user
+        user = self.context["request"].user
         RatedPhotoSerializer(read_only=True, many=True)
         objects = RatedPhoto.objects.filter(date=foo.date, user=user.profile)
         serializer = RatedPhotoSerializer(objects, read_only=True, many=True)

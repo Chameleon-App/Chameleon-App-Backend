@@ -12,7 +12,7 @@ from .serializers import (
     RatedPhotoSerializer,
     UserSerializer,
     ProfileSerializer,
-    DaySerializer
+    DaySerializer,
 )
 from .service.color_service import ColorService
 from .service.photo_rater_service import PhotoRaterService

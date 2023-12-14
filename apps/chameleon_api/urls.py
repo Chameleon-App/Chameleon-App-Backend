@@ -11,5 +11,5 @@ urlpatterns = [
     path("auth/signup/", CreateUserView.as_view()),
     path("auth/token/", ObtainAuthToken.as_view()),
     path("profiles/<str:username>/", ProfileInfoView.as_view()),
-    path("days/", DaysListView.as_view())
+    path("days/", DaysListView.as_view()),
 ]
