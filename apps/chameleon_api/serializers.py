@@ -82,5 +82,5 @@ class DaySerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         RatedPhotoSerializer(read_only=True, many=True)
         objects = RatedPhoto.objects.filter(date=foo.date, user=user.profile)
-        serializer = RatedPhotoSerializer(objects, read_only=True, many=True)
+        serializer = RatedPhotoSerializer(objects, read_only=True, many=True, context={"request": self.context["request"]})
         return serializer.data
