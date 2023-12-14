@@ -4,7 +4,14 @@ from django.contrib.auth import get_user_model
 from rest_framework.generics import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ColorSerializer, DailyColorsSerializer, RatedPhotoSerializer, UserSerializer
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from .serializers import (
+    ColorSerializer,
+    DailyColorsSerializer,
+    RatedPhotoSerializer,
+    UserSerializer,
+)
 from .service.color_service import ColorService
 from .service.photo_rater_service import PhotoRaterService
 from .service.photo_service import PhotoService
@@ -32,10 +39,15 @@ class TestGenerateColorsView(APIView):
 
 
 class PhotoRatingView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         photo_bytes = request.FILES.get("photo").read()
+        user = request.user
+
         photo_rater_service = PhotoRaterService()
-        rated_photo = photo_rater_service.get_rated_photo(photo_bytes)
+        rated_photo = photo_rater_service.get_rated_photo(photo_bytes, user)
         serializer = RatedPhotoSerializer(rated_photo)
         return Response(serializer.data)
 
@@ -46,7 +58,7 @@ class TopPhotosListView(ListAPIView):
     def get_queryset(self):
         date = self.request.query_params.get("date", None)
         if date:
-            date = datetime.strptime(date, '%Y-%m-%d').date()
+            date = datetime.strptime(date, "%Y-%m-%d").date()
         offset = int(self.request.query_params.get("offset", 0))
         limit = int(self.request.query_params.get("limit", 15))
 

@@ -41,8 +41,8 @@ class PhotoRaterService:
         )
         return round(rating)
 
-    def get_rated_photo(self, photo_bytes: bytes):
+    def get_rated_photo(self, photo_bytes: bytes, user):
         photo = Image.open(io.BytesIO(photo_bytes))
         rating = self.rate(photo)
         photo_repo = PhotoRepository()
-        return photo_repo.add_rated_photo(photo, rating)
+        return photo_repo.add_rated_photo(photo, rating, user)

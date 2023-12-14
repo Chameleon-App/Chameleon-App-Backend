@@ -9,5 +9,5 @@ urlpatterns = [
     path("photos/rate/", PhotoRatingView.as_view()),
     path("photos/top/", TopPhotosListView.as_view()),
     path("auth/signup/", CreateUserView.as_view()),
-    path('auth/token/', ObtainAuthToken.as_view())
+    path("auth/token/", ObtainAuthToken.as_view()),
 ]
