@@ -12,6 +12,7 @@ from .serializers import (
     RatedPhotoSerializer,
     UserSerializer,
     ProfileSerializer,
+    DaySerializer
 )
 from .service.color_service import ColorService
 from .service.photo_rater_service import PhotoRaterService
@@ -77,3 +78,13 @@ class ProfileInfoView(APIView):
         snippet = ProfileService.get_profile_info(self.kwargs["username"])
         serializer_class = ProfileSerializer(snippet, context={"request": request})
         return Response(serializer_class.data)
+
+
+class DaysListView(ListAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = DaySerializer
+
+    def get_queryset(self):
+        queryset = ColorService.get_all_daily_colors()
+        return queryset

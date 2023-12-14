@@ -31,6 +31,10 @@ class ColorRepository:
         return DailyColors.objects.latest("id")
 
     @staticmethod
+    def get_all_daily_colors():
+        return DailyColors.objects.all()
+
+    @staticmethod
     def add_daily_colors(colors):
         daily = DailyColors.objects.create()
         daily.colors.set(colors)

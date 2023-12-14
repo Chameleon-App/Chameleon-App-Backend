@@ -12,6 +12,10 @@ class ColorService:
         return ColorRepository.get_last_daily_color()
 
     @staticmethod
+    def get_all_daily_colors():
+        return ColorRepository.get_all_daily_colors()
+
+    @staticmethod
     def generate_new_daily_color():
         color_generator = ColorGenerator(ColorRepository)
         colors = color_generator.generate_daily_colors()

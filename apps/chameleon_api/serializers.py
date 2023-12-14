@@ -1,24 +1,6 @@
 from rest_framework import serializers
 from .models import *
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "username", "password", "email", "first_name", "last_name"]
-        write_only_fields = ("password",)
-        read_only_fields = ("id",)
-
-    def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data["username"],
-            email=validated_data["email"],
-        )
-
-        user.set_password(validated_data["password"])
-        user.save()
-
-        return user
+from .service.profile_service import ProfileService
 
 
 class ColorSerializer(serializers.ModelSerializer):
@@ -53,3 +35,52 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
+
+
+class UserSerializer(serializers.ModelSerializer):
+    profile_photo = serializers.ImageField(source="profile.profile_photo_url")
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "password", "email", "profile_photo"]
+        write_only_fields = ("password",)
+        read_only_fields = ("id",)
+
+    def create(self, validated_data):
+        profile_data = validated_data.pop("profile")
+
+        user = User.objects.create(
+            username=validated_data["username"],
+            email=validated_data["email"],
+        )
+
+        user.set_password(validated_data["password"])
+
+        profile_service = ProfileService()
+
+        profile = profile_service.post_profile_photo(
+            user, profile_data["profile_photo_url"].file
+        )
+
+        # TODO: profile should be assigned like this because it's called when a user is created
+        user.profile = profile
+
+        user.save()
+
+        return user
+
+
+class DaySerializer(serializers.ModelSerializer):
+    colors = ColorSerializer(many=True)
+    photos = serializers.SerializerMethodField('get_photos')
+
+    class Meta:
+        model = DailyColors
+        fields = ["colors", "photos"]
+
+    def get_photos(self, foo):
+        user = self.context['request'].user
+        RatedPhotoSerializer(read_only=True, many=True)
+        objects = RatedPhoto.objects.filter(date=foo.date, user=user.profile)
+        serializer = RatedPhotoSerializer(objects, read_only=True, many=True)
+        return serializer.data
