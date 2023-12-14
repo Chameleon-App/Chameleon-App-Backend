@@ -11,10 +11,11 @@ class PhotoRepository:
         return str(hash(photo.tobytes()))
 
     @staticmethod
-    def get_most_rated_photos(filter_date: datetime.date):
-        if filter_date is None:
-            return RatedPhoto.objects.all().order_by("rating")
-        return RatedPhoto.objects.filter(date=filter_date).order_by("rating")
+    def get_most_rated_photos(date: datetime.date, offset: int, limit: int):
+        objects = RatedPhoto.objects.all().order_by("rating")
+        if date:
+            objects = objects.filter(date=date)
+        return objects[offset:offset+limit]
 
     def add_rated_photo(self, photo: Image, rating: int):
         path = self.get_new_path(photo)

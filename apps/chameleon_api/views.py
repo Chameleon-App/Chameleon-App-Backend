@@ -1,7 +1,10 @@
+from datetime import datetime
+
+from django.contrib.auth import get_user_model
 from rest_framework.generics import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ColorSerializer, DailyColorsSerializer, RatedPhotoSerializer
+from .serializers import ColorSerializer, DailyColorsSerializer, RatedPhotoSerializer, UserSerializer
 from .service.color_service import ColorService
 from .service.photo_rater_service import PhotoRaterService
 from .service.photo_service import PhotoService
@@ -37,6 +40,19 @@ class PhotoRatingView(APIView):
         return Response(serializer.data)
 
 
-class TodayPhotoRating(ListAPIView):
+class TopPhotosListView(ListAPIView):
     serializer_class = RatedPhotoSerializer
-    queryset = PhotoService.get_most_rated_today()
+
+    def get_queryset(self):
+        date = self.request.query_params.get("date", None)
+        if date:
+            date = datetime.strptime(date, '%Y-%m-%d').date()
+        offset = self.request.query_params.get("offset", 0)
+        limit = self.request.query_params.get("limit", 15)
+
+        return PhotoService.get_most_rated_photos(date=date, offset=offset, limit=limit)
+
+
+class CreateUserView(CreateAPIView):
+    model = get_user_model()
+    serializer_class = UserSerializer
