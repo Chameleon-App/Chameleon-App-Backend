@@ -4,9 +4,10 @@ from PIL import Image
 from django.conf import settings
 from apps.chameleon_api.models import RatedPhoto
 from apps.chameleon_api.repository.profile_repository import ProfileRepository
+from apps.chameleon_api.repository.repository import RepositoryInterface
 
 
-class PhotoRepository:
+class PhotoRepository(RepositoryInterface):
     @staticmethod
     def get_new_path(photo: Image) -> str:
         return str(hash(photo.tobytes()))

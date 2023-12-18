@@ -1,11 +1,10 @@
-import io
-
 from PIL import Image
 
 from apps.chameleon_api.repository.profile_repository import ProfileRepository
+from apps.chameleon_api.service.service import ServiceInterface
 
 
-class ProfileService:
+class ProfileService(ServiceInterface):
     @staticmethod
     def get_profile_info(username: str):
         profile_repo = ProfileRepository()

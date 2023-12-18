@@ -2,9 +2,10 @@ import random
 import datetime
 
 from apps.chameleon_api.models import PantoneColor, DailyColors, PantoneColorPrototype
+from apps.chameleon_api.repository.repository import RepositoryInterface
 
 
-class ColorRepository:
+class ColorRepository(RepositoryInterface):
     @staticmethod
     def get_all_colors():
         return PantoneColor.objects.all()

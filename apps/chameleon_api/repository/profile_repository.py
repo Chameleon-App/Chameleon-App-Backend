@@ -3,9 +3,10 @@ from PIL import Image
 from django.conf import settings
 from django.contrib.auth.models import User
 from apps.chameleon_api.models import Profile
+from apps.chameleon_api.repository.repository import RepositoryInterface
 
 
-class ProfileRepository:
+class ProfileRepository(RepositoryInterface):
     @staticmethod
     def get_profile_by_user(user):
         return Profile.objects.get(user=user)

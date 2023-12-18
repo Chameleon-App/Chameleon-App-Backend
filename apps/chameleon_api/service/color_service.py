@@ -1,8 +1,9 @@
 from apps.chameleon_api.repository.color_repository import ColorRepository
 from apps.chameleon_api.utils.color_generator import ColorGenerator
+from apps.chameleon_api.service.service import ServiceInterface
 
 
-class ColorService:
+class ColorService(ServiceInterface):
     @staticmethod
     def get_all_colors():
         return ColorRepository.get_all_colors()

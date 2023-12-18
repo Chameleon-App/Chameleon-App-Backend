@@ -6,9 +6,10 @@ from apps.chameleon_api.utils.color_generator import Color
 from apps.chameleon_api.utils.linear_interpolation import LinearInterpolation
 from apps.chameleon_api.repository.photo_repository import PhotoRepository
 from apps.chameleon_api.repository.color_repository import ColorRepository
+from apps.chameleon_api.service.service import ServiceInterface
 
 
-class PhotoRaterService:
+class PhotoRaterService(ServiceInterface):
     def __init__(self):
         self.linear_interpolation = LinearInterpolation(x1=0, x2=0.3, y1=0, y2=1)
 
