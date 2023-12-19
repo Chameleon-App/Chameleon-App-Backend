@@ -1,6 +1,7 @@
 import io
 import numpy as np
 from PIL import Image
+from injector import inject
 
 from apps.chameleon_api.utils.color_generator import Color
 from apps.chameleon_api.utils.linear_interpolation import LinearInterpolation
@@ -10,7 +11,9 @@ from apps.chameleon_api.service.service import ServiceInterface
 
 
 class PhotoRaterService(ServiceInterface):
-    def __init__(self):
+    @inject
+    def __init__(self, repository: ColorRepository):
+        super().__init__(repository)
         self.linear_interpolation = LinearInterpolation(x1=0, x2=0.3, y1=0, y2=1)
 
     @staticmethod
@@ -30,9 +33,8 @@ class PhotoRaterService(ServiceInterface):
         return int(np.sum(np.sum(arr, axis=1) == 3))
 
     def rate(self, photo: Image) -> int:
-        color_repo = ColorRepository()
         photo_arr = np.array(photo)
-        colors = color_repo.get_last_daily_color()
+        colors = self.repository.get_last_daily_color()
         colors = [Color(color_dict=color) for color in colors.colors.values()]
         rating = self.harmonic_mean(
             [

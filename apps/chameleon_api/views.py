@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from injector import inject
+
 from django.contrib.auth import get_user_model
 from rest_framework.generics import *
 from rest_framework.views import APIView
@@ -26,8 +28,13 @@ class ColorListView(ListAPIView):
 
 
 class DailyColorsView(APIView):
+    @inject
+    def __init__(self, service: ColorService, **kwargs):
+        super().__init__(**kwargs)
+        self.service = service
+
     def get(self, request):
-        snippet = ColorService.get_last_daily_color()
+        snippet = self.service.get_last_daily_color()
         serializer_class = DailyColorsSerializer(snippet)
         return Response(serializer_class.data)
 
@@ -49,6 +56,11 @@ class PhotoRatingView(APIView):
 class TopPhotosListView(ListAPIView):
     serializer_class = RatedPhotoSerializer
 
+    @inject
+    def __init__(self, service: PhotoService, **kwargs):
+        super().__init__(**kwargs)
+        self.service = service
+
     def get_queryset(self):
         date = self.request.query_params.get("date", None)
         if date:
@@ -56,7 +68,7 @@ class TopPhotosListView(ListAPIView):
         offset = int(self.request.query_params.get("offset", 0))
         limit = int(self.request.query_params.get("limit", 15))
 
-        return PhotoService.get_most_rated_photos(date=date, offset=offset, limit=limit)
+        return self.service.get_most_rated_photos(date=date, offset=offset, limit=limit)
 
 
 class CreateUserView(CreateAPIView):
@@ -65,8 +77,13 @@ class CreateUserView(CreateAPIView):
 
 
 class ProfileInfoView(APIView):
+    @inject
+    def __init__(self, service: ProfileService, **kwargs):
+        super().__init__(**kwargs)
+        self.service = service
+
     def get(self, request, *args, **kwargs):
-        snippet = ProfileService.get_profile_info(self.kwargs["username"])
+        snippet = self.service.get_profile_info(self.kwargs["username"])
         serializer_class = ProfileSerializer(snippet, context={"request": request})
         return Response(serializer_class.data)
 
@@ -76,6 +93,11 @@ class DaysListView(ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = DaySerializer
 
+    @inject
+    def __init__(self, service: ColorService, **kwargs):
+        super().__init__(**kwargs)
+        self.service = service
+
     def get_queryset(self):
-        queryset = ColorService.get_all_daily_colors()
+        queryset = self.service.get_all_daily_colors()
         return queryset

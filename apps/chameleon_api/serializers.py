@@ -41,6 +41,7 @@ class UserSerializer(serializers.ModelSerializer):
     profile_photo = serializers.ImageField(
         source="profile.profile_photo_url", required=False
     )
+    service = ProfileService()
 
     class Meta:
         model = User
@@ -60,10 +61,8 @@ class UserSerializer(serializers.ModelSerializer):
 
         user.set_password(validated_data["password"])
 
-        profile_service = ProfileService()
-
         if "profile_photo_url" in profile_data:
-            profile = profile_service.post_profile_photo(
+            profile = self.service.post_profile_photo(
                 user, profile_data["profile_photo_url"].file
             )
             # TODO: profile should be assigned like this because it's called when a user is created

@@ -1,9 +1,15 @@
+from injector import inject
+
 from apps.chameleon_api.repository.color_repository import ColorRepository
 from apps.chameleon_api.utils.color_generator import ColorGenerator
 from apps.chameleon_api.service.service import ServiceInterface
 
 
 class ColorService(ServiceInterface):
+    @inject
+    def __init__(self, repository: ColorRepository):
+        super().__init__(repository)
+
     @staticmethod
     def get_all_colors():
         return ColorRepository.get_all_colors()
