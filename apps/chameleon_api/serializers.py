@@ -38,7 +38,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    profile_photo = serializers.ImageField(source="profile.profile_photo_url")
+    profile_photo = serializers.ImageField(
+        source="profile.profile_photo_url", required=False
+    )
 
     class Meta:
         model = User
@@ -47,7 +49,9 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ("id",)
 
     def create(self, validated_data):
-        profile_data = validated_data.pop("profile")
+        profile_data = {}
+        if "profile" in validated_data:
+            profile_data = validated_data.pop("profile")
 
         user = User.objects.create(
             username=validated_data["username"],
@@ -58,12 +62,12 @@ class UserSerializer(serializers.ModelSerializer):
 
         profile_service = ProfileService()
 
-        profile = profile_service.post_profile_photo(
-            user, profile_data["profile_photo_url"].file
-        )
-
-        # TODO: profile should be assigned like this because it's called when a user is created
-        user.profile = profile
+        if "profile_photo_url" in profile_data:
+            profile = profile_service.post_profile_photo(
+                user, profile_data["profile_photo_url"].file
+            )
+            # TODO: profile should be assigned like this because it's called when a user is created
+            user.profile = profile
 
         user.save()
 

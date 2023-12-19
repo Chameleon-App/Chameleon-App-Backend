@@ -32,15 +32,6 @@ class DailyColorsView(APIView):
         return Response(serializer_class.data)
 
 
-class TestGenerateColorsView(APIView):
-    def get(self, request):
-        service = ColorService()
-        service.generate_new_daily_color()
-        snippet = ColorService.get_last_daily_color()
-        serializer_class = DailyColorsSerializer(snippet)
-        return Response(serializer_class.data)
-
-
 class PhotoRatingView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]

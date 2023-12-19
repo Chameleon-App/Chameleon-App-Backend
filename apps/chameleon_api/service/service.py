@@ -1,2 +1,3 @@
 class ServiceInterface:
-    pass
+    def __init__(self, repository):
+        self.repository = repository

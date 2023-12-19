@@ -5,13 +5,12 @@ from apps.chameleon_api.service.service import ServiceInterface
 
 
 class ProfileService(ServiceInterface):
-    @staticmethod
-    def get_profile_info(username: str):
-        profile_repo = ProfileRepository()
-        return profile_repo.get_profile_info(username)
+    def __init__(self):
+        super().__init__(ProfileRepository())
 
-    @staticmethod
-    def post_profile_photo(user, photo_bytes):
+    def get_profile_info(self, username: str):
+        return self.repository.get_profile_info(username)
+
+    def post_profile_photo(self, user, photo_bytes):
         photo = Image.open(photo_bytes)
-        profile_repo = ProfileRepository()
-        return profile_repo.post_profile_picture(user, photo)
+        return self.repository.post_profile_picture(user, photo)
