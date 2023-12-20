@@ -1,11 +1,41 @@
 version: '3'
 
 services:
+  postgres:
+    image: "postgres:latest"
+    environment:
+      POSTGRES_DB: "chameleon"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - "5432:5432"
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6739:6739"
+    volumes:
+      - ./Users/evlko/Documents/GitHub/Chameleon_App_Backend/redis.conf:/etc/redis/redis.conf
+    command: [ "redis-server", "/etc/redis/redis.conf" ]
   backend:
+    depends_on:
+      - redis
+      - postgres
     restart: always
     build: .
     ports:
       - "8000:8000"
     container_name: backend
+    env_file:
+      - .env
+  celery:
+    depends_on:
+      - backend
+      - redis
+    build: .
+    command: >
+      bash -c "
+      celery -A config beat -l info &
+      celery -A config worker -l info
+      "
     env_file:
       - .env

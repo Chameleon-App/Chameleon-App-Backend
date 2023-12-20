@@ -19,4 +19,16 @@ WORKDIR /app
 
 EXPOSE 8000
 
+ENV DJANGO_SUPERUSER_EMAIL=admin@example.com
+ENV DJANGO_SUPERUSER_USERNAME=admin
+ENV DJANGO_SUPERUSER_PASSWORD=password
+
+CMD ["python", "manage.py", "loaddata", "seeders/pantone-prototypes.json"]
+
+CMD ["python", "manage.py", "loaddata", "seeders/pantone-colors.json"]
+
+CMD ["python", "manage.py", "createsuperuser", "--noinput"]
+
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+
