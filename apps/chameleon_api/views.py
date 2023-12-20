@@ -43,12 +43,16 @@ class PhotoRatingView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @inject
+    def __init__(self, service: PhotoRaterService, **kwargs):
+        super().__init__(**kwargs)
+        self.service = service
+
     def post(self, request):
         photo_bytes = request.FILES.get("photo").read()
         user = request.user
 
-        photo_rater_service = PhotoRaterService()
-        rated_photo = photo_rater_service.get_rated_photo(photo_bytes, user)
+        rated_photo = self.service.get_rated_photo(photo_bytes, user)
         serializer = RatedPhotoSerializer(rated_photo, context={"request": request})
         return Response(serializer.data)
 
