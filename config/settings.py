@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "drf_yasg",
-    "django_injector",
     "apps.chameleon_api",
 ]
 

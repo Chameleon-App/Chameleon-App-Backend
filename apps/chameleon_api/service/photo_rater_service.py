@@ -1,7 +1,6 @@
 import io
 import numpy as np
 from PIL import Image
-from injector import inject
 
 from apps.chameleon_api.utils.color_generator import Color
 from apps.chameleon_api.utils.linear_interpolation import LinearInterpolation
@@ -11,9 +10,9 @@ from apps.chameleon_api.service.service import ServiceInterface
 
 
 class PhotoRaterService(ServiceInterface):
-    @inject
-    def __init__(self, repository: ColorRepository):
-        super().__init__(repository)
+    repository = ColorRepository()
+
+    def __init__(self):
         self.linear_interpolation = LinearInterpolation(x1=0, x2=0.3, y1=0, y2=1)
 
     @staticmethod
