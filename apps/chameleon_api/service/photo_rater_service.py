@@ -17,31 +17,37 @@ class PhotoRaterService(ServiceInterface):
 
     @staticmethod
     def harmonic_mean(arr: np.array) -> float:
-        eps = np.finfo(float).eps
+        eps = 0.1
         return len(arr) / np.sum([1 / (x + eps) for x in arr])
 
     @staticmethod
     def mask_count(arr: np.array, color: Color, threshold: int) -> int:
         values = color.get_np_from_components()
+        mask = np.full(arr.shape, True)
 
         for i, value in enumerate(values):
-            arr[:, i] = (arr[:, i] >= value - threshold) & (
-                arr[:, i] <= value + threshold
+            mask[:, :, i] = mask[:, :, i] * (
+                (arr[:, :, i] >= value - threshold)
+                & (arr[:, :, i] <= value + threshold)
             )
 
-        return int(np.sum(np.sum(arr, axis=1) == 3))
+        return int(np.sum(np.sum(mask, axis=2) == 3))
 
     def rate(self, photo: Image) -> int:
         photo_arr = np.array(photo)
+        photo_size = photo_arr.shape[0] * photo_arr.shape[1]
         colors = self.repository.get_last_daily_color()
         colors = [Color(color_dict=color) for color in colors.colors.values()]
         rating = self.harmonic_mean(
             [
-                self.linear_interpolation.calc(self.mask_count(photo_arr, color, 10))
+                self.linear_interpolation.calc(
+                    self.mask_count(photo_arr, color, 10) / photo_size
+                )
                 for color in colors
             ]
         )
-        return round(rating)
+
+        return round(rating * 100)
 
     def get_rated_photo(self, photo_bytes: bytes, user):
         photo = Image.open(io.BytesIO(photo_bytes))
