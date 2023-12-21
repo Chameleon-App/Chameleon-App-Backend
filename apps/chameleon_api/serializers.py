@@ -79,7 +79,7 @@ class DaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DailyColors
-        fields = ["colors", "photos"]
+        fields = ["date", "colors", "photos"]
 
     def get_photos(self, foo):
         user = self.context["request"].user
