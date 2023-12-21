@@ -76,6 +76,17 @@ class ProfileInfoView(APIView):
         return Response(serializer_class.data)
 
 
+class MyProfileInfoView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    service = ProfileService()
+
+    def get(self, request, *args, **kwargs):
+        snippet = self.service.get_profile_info_by_user(self.request.user)
+        serializer_class = ProfileSerializer(snippet, context={"request": request})
+        return Response(serializer_class.data)
+
+
 class DaysListView(ListAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
