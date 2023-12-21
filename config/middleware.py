@@ -22,7 +22,7 @@ class CheckTokenMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.path == "/api/auth/check_token":
+        if request.path == "/api/auth/check_token/":
             try:
                 data = json.loads(request.body.decode(encoding="UTF-8"))
                 token = data["token"]
