@@ -55,6 +55,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "config.middleware.HealthCheckMiddleware",
+    "config.middleware.CheckTokenMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
