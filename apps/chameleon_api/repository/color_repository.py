@@ -33,7 +33,7 @@ class ColorRepository(RepositoryInterface):
 
     @staticmethod
     def get_all_daily_colors():
-        return DailyColors.objects.all()
+        return DailyColors.objects.all().order_by("-date")
 
     @staticmethod
     def add_daily_colors(colors):
