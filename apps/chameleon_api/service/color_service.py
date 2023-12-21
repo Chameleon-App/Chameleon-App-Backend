@@ -5,21 +5,17 @@ from apps.chameleon_api.service.service import ServiceInterface
 
 class ColorService(ServiceInterface):
     repository = ColorRepository()
+    generator = ColorGenerator(repository)
 
-    @staticmethod
-    def get_all_colors():
-        return ColorRepository.get_all_colors()
+    def get_all_colors(self):
+        return self.repository.get_all_colors()
 
-    @staticmethod
-    def get_last_daily_color():
-        return ColorRepository.get_last_daily_color()
+    def get_last_daily_color(self):
+        return self.repository.get_last_daily_color()
 
-    @staticmethod
-    def get_all_daily_colors():
-        return ColorRepository.get_all_daily_colors()
+    def get_all_daily_colors(self):
+        return self.repository.get_all_daily_colors()
 
-    @staticmethod
-    def generate_new_daily_color():
-        color_generator = ColorGenerator(ColorRepository)
-        colors = color_generator.generate_daily_colors()
-        ColorRepository.add_daily_colors(colors)
+    def generate_new_daily_color(self):
+        colors = self.generator.generate_daily_colors()
+        self.repository.add_daily_colors(colors)

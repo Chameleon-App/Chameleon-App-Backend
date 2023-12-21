@@ -22,7 +22,8 @@ from .service.profile_service import ProfileService
 
 class ColorListView(ListAPIView):
     serializer_class = ColorSerializer
-    queryset = ColorService.get_all_colors()
+    service = ColorService()
+    queryset = service.get_all_colors()
 
 
 class DailyColorsView(APIView):
