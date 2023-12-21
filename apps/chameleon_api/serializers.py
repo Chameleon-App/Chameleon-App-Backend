@@ -31,6 +31,9 @@ class RatedPhotoSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="user.username")
     photos = RatedPhotoSerializer(read_only=True, many=True)
+    total_photos = serializers.ReadOnlyField()
+    total_rating = serializers.ReadOnlyField()
+    current_streak = serializers.ReadOnlyField()
 
     class Meta:
         model = Profile

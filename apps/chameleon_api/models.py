@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from django.db.models import Sum
 from django.utils.translation import gettext as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
@@ -11,9 +12,34 @@ class Profile(models.Model):
     )
     profile_photo_url = models.ImageField(upload_to="", default="evlko.png")
     bio = models.TextField(max_length=500, blank=True)
-    current_streak = models.IntegerField(default=0)
-    total_photos = models.IntegerField(default=0)
-    total_rating = models.IntegerField(default=0)
+
+    @property
+    def current_streak(self) -> int:
+        photo_dates = (
+            RatedPhoto.objects.filter(user=self)
+            .order_by("-date")
+            .values_list("date", flat=True)
+            .distinct()
+        )
+        if len(photo_dates) == 0:
+            return 0
+        today = datetime.datetime.today().date()
+        if today != photo_dates[0]:
+            return 0
+        for i in range(1, len(photo_dates)):
+            if (photo_dates[i - 1] - photo_dates[i]).days > 1:
+                return i
+        return len(photo_dates)
+
+    @property
+    def total_photos(self) -> int:
+        return len(RatedPhoto.objects.filter(user=self))
+
+    @property
+    def total_rating(self) -> int:
+        return RatedPhoto.objects.filter(user=self).aggregate(Sum("rating"))[
+            "rating__sum"
+        ]
 
 
 class PantoneColorPrototype(models.Model):
