@@ -29,7 +29,7 @@ class ColorRepository(RepositoryInterface):
 
     @staticmethod
     def get_last_daily_color():
-        return DailyColors.objects.latest("id")
+        return DailyColors.objects.latest("date")
 
     @staticmethod
     def get_all_daily_colors():
