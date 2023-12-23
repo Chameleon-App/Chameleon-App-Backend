@@ -2,9 +2,10 @@ import random
 import datetime
 
 from apps.chameleon_api.models import PantoneColor, DailyColors, PantoneColorPrototype
+from apps.chameleon_api.repository.repository import RepositoryInterface
 
 
-class ColorRepository:
+class ColorRepository(RepositoryInterface):
     @staticmethod
     def get_all_colors():
         return PantoneColor.objects.all()
@@ -28,13 +29,15 @@ class ColorRepository:
 
     @staticmethod
     def get_last_daily_color():
-        return DailyColors.objects.latest("id")
+        return DailyColors.objects.latest("date")
 
     @staticmethod
-    def add_daily_colors(colors_id):
-        daily = DailyColors()
-        for color_id in colors_id:
-            color = PantoneColor.objects.get(id=color_id)
-            daily.colors.add(color)
+    def get_all_daily_colors():
+        return DailyColors.objects.all().order_by("-date")
+
+    @staticmethod
+    def add_daily_colors(colors):
+        daily = DailyColors.objects.create()
+        daily.colors.set(colors)
         daily.date = datetime.date.today()
         daily.save()

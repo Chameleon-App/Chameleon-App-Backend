@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 
 from apps.chameleon_api.utils.color_convertor import ColorConvertor
@@ -36,9 +38,11 @@ class ColorGenerator:
         color_p1 = self.repo.get_random_color()
         color_1 = Color(color_obj=color_p1)
 
-        # TODO: add random method
+        generate_method = random.choice(
+            [self.generate_triangle_method, self.generate_triangle_method]
+        )
 
-        color_2, color_3 = self.generate_triangle_method(color_1)
+        color_2, color_3 = generate_method(color_1)
 
         color_p2 = self.map_color_to_pantone(color_2)
         color_p3 = self.map_color_to_pantone(color_3)

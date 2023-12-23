@@ -7,3 +7,5 @@ services:
     ports:
       - "8000:8000"
     container_name: backend
+    env_file:
+      - .env

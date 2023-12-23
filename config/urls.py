@@ -35,7 +35,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("api/", include("apps.chameleon_api.urls")),
     path(
-        "doc/swagger/",
+        "docs/swagger/",
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
@@ -43,7 +43,7 @@ urlpatterns = [
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if os.environ["MODE"] == "0":
+if os.environ["DJANGO_DEBUG"]:
     urlpatterns += [
         path("admin/", admin.site.urls),
     ]
